@@ -11,23 +11,23 @@ A simple web application for managing a Pokémon inventory. Users can store, vie
 ## Database Schema
 
 ### Pokémon Table
-- `pokemon(_pokedex_id_, name, type_1, type_2, height, weight)`
-  - **Primary Key**: _pokedex_id_
+- `pokemon(pokedex_id, name, type_1, type_2, height, weight)`
+  - **Primary Key**: pokedex_id
 
 ### Inventory Table
-- `inventory(_id_, _pokedex_id_ (fk), nickname, level, attack, defense, height, weight)`
-  - **Primary Key**: _id_
-  - **Foreign Key**: _pokedex_id_ (fk) references `pokemon(_pokedex_id_)`
+- `inventory(id, pokedex_id (fk), nickname, level, attack, defense, height, weight)`
+  - **Primary Key**: id
+  - **Foreign Key**: pokedex_id (fk) references `pokemon(pokedex_id)`
 
 ### Types Table
-- `types(_type_id_, type_name)`
-  - **Primary Key**: _type_id_
+- `types(type_id, type_name)`
+  - **Primary Key**: type_id
 
 ### Pokémon Types Table (For Many-to-Many Relationship)
-- `pokemon_types(_pokedex_id_ (fk), _type_id_ (fk))`
+- `pokemon_types(pokedex_id (fk), type_id (fk))`
   - **Foreign Keys**: 
-    - _pokedex_id_ (fk) references `pokemon(_pokedex_id_)`
-    - _type_id_ (fk) references `types(_type_id_)`
+    - pokedex_id (fk) references `pokemon(pokedex_id)`
+    - type_id (fk) references `types(type_id)`
 
 
 ## Features
