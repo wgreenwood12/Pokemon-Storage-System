@@ -2,6 +2,9 @@
 
 A simple web application for managing a Pokémon inventory. Users can store, view, filter, add, edit, and delete Pokémon entries in a Pokédex format.
 
+![image](https://github.com/user-attachments/assets/eeae2a3d-971f-461c-b034-19c0c854049b)
+
+
 ## Features
 - **View Pokémon**: See a list of Pokémon with their attributes.
 - **Filter by Type**: Use a dropdown to view Pokémon by their type (e.g., Grass, Fire).
