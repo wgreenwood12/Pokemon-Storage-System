@@ -8,7 +8,7 @@ A simple web application for managing a Pokémon inventory. Users can store, vie
     <img src="https://github.com/user-attachments/assets/eeae2a3d-971f-461c-b034-19c0c854049b" width="300" />
 </div>
 
-## he
+## Database Schema
 
 ### Pokémon Table
 - `pokemon(_pokedex_id_, name, type_1, type_2, height, weight)`
