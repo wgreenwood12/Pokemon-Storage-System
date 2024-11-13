@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './App.css';
 
 const App: React.FC = () => {
     const [greeting, setGreeting] = useState<string>('');
@@ -12,23 +13,23 @@ const App: React.FC = () => {
         height: '',
         weight: '',
     });
-    const [editingItem, setEditingItem] = useState<any | null>(null); 
+    const [editingItem, setEditingItem] = useState<any | null>(null);
     const [selectedType, setSelectedType] = useState<string>('');
-    const [types, setTypes] = useState<any[]>([]); 
+    const [types, setTypes] = useState<any[]>([]);
 
     useEffect(() => {
         fetch('http://localhost:3000/api/greeting')
             .then(response => response.json())
             .then(data => setGreeting(data.message))
             .catch(error => console.error('Error fetching greeting:', error));
-        
-        fetchTypes(); 
-        fetchInventory(); 
+
+        fetchTypes();
+        fetchInventory();
     }, []);
 
     const fetchTypes = async () => {
         try {
-            const response = await fetch('http://localhost:3000/api/types'); 
+            const response = await fetch('http://localhost:3000/api/types');
             const data = await response.json();
             setTypes(data);
         } catch (error) {
@@ -38,7 +39,7 @@ const App: React.FC = () => {
 
     const fetchInventory = async (type?: string) => {
         try {
-            const response = await fetch(`http://localhost:3000/api/inventory${type ? `/filter/${type}` : ''}`); 
+            const response = await fetch(`http://localhost:3000/api/inventory${type ? `/filter/${type}` : ''}`);
             const data = await response.json();
             setInventory(data);
         } catch (error) {
@@ -71,7 +72,7 @@ const App: React.FC = () => {
     };
 
     const cancelEdit = () => {
-        setEditingItem(null); 
+        setEditingItem(null);
         setNewItem({ pokedex_id: '', nickname: '', level: '', attack: '', defense: '', height: '', weight: '' });
     };
 
@@ -79,31 +80,24 @@ const App: React.FC = () => {
         e.preventDefault();
         try {
             if (editingItem) {
-                // Update item
                 const response = await fetch(`http://localhost:3000/api/inventory/${editingItem.id}`, {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newItem),
                 });
                 if (response.ok) {
-                    setEditingItem(null);
-                    setNewItem({ pokedex_id: '', nickname: '', level: '', attack: '', defense: '', height: '', weight: '' });
+                    cancelEdit();
                     fetchInventory(selectedType);
                 }
             } else {
-                // Add new item
                 const response = await fetch('http://localhost:3000/api/inventory', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newItem),
                 });
                 if (response.ok) {
-                    fetchInventory(selectedType); // Refresh inventory after adding an item
-                    setNewItem({ pokedex_id: '', nickname: '', level: '', attack: '', defense: '', height: '', weight: '' });
+                    fetchInventory(selectedType);
+                    cancelEdit();
                 }
             }
         } catch (error) {
@@ -113,13 +107,9 @@ const App: React.FC = () => {
 
     const handleDelete = async (id: number) => {
         try {
-            const response = await fetch(`http://localhost:3000/api/inventory/${id}`, {
-                method: 'DELETE',
-            });
+            const response = await fetch(`http://localhost:3000/api/inventory/${id}`, { method: 'DELETE' });
             if (response.ok) {
-                fetchInventory(selectedType); // Refresh inventory after deletion
-            } else {
-                console.error('Failed to delete item');
+                fetchInventory(selectedType);
             }
         } catch (error) {
             console.error('Error deleting inventory item:', error);
@@ -127,20 +117,24 @@ const App: React.FC = () => {
     };
 
     return (
-        <div>
+        <div className="app-container">
             <h1>Pokedex</h1>
             <p>Welcome to your Pokemon Storage. Here is an inventory of all your pokemon stored in the PC.</p>
-            <h2>Inventory</h2>
 
-            {/* Dropdown for selecting Pokémon types */}
-            <select value={selectedType} onChange={handleTypeChange}>
-                <option value="">Select a Type</option>
-                {types.map(type => (
-                    <option key={type.type_name} value={type.type_name}>{type.type_name}</option>
-                ))}
-            </select>
+            <p>{greeting}</p>
 
-            <table>
+            <div className="controls">
+                <select className="type-select" value={selectedType} onChange={handleTypeChange}>
+                    <option value="">Select a Type</option>
+                    {types.map(type => (
+                        <option key={type.type_name} value={type.type_name}>
+                            {type.type_name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            <table className="inventory-table">
                 <thead>
                     <tr>
                         <th>Pokemon</th>
@@ -164,33 +158,30 @@ const App: React.FC = () => {
                             <td>{item.height}</td>
                             <td>{item.weight}</td>
                             <td>
-                                <button onClick={() => handleDelete(item.id)} style={{ color: 'red' }}>X</button>
-                                <button onClick={() => startEditing(item)}>Edit</button>
+                                <button className="delete-btn" onClick={() => handleDelete(item.id)}>Release</button>
+                                <button className="edit-btn" onClick={() => startEditing(item)}>Edit</button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
-            <h3>{editingItem ? 'Edit Item' : 'Add New Item'}</h3>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="number"
-                    name="pokedex_id"
-                    placeholder="Pokedex ID"
-                    value={newItem.pokedex_id}
-                    onChange={handleInputChange}
-                    required
-                    readOnly={!!editingItem} // Make read-only if editing
-                />
-                <input type="text" name="nickname" placeholder="Nickname" value={newItem.nickname} onChange={handleInputChange} required />
-                <input type="number" name="level" placeholder="Level" value={newItem.level} onChange={handleInputChange} required />
-                <input type="number" name="attack" placeholder="Attack" value={newItem.attack} onChange={handleInputChange} required />
-                <input type="number" name="defense" placeholder="Defense" value={newItem.defense} onChange={handleInputChange} required />
-                <input type="number" name="height" placeholder="Height" value={newItem.height} onChange={handleInputChange} required />
-                <input type="number" name="weight" placeholder="Weight" value={newItem.weight} onChange={handleInputChange} required />
-                <button type="submit">{editingItem ? 'Update Item' : 'Add Item'}</button>
-                {editingItem && <button type="button" onClick={cancelEdit}>Cancel</button>} 
+            <form className="item-form" onSubmit={handleSubmit}>
+                <h3>{editingItem ? 'Edit Item' : 'Add New Item'}</h3>
+                {Object.keys(newItem).map((key) => (
+                    <input
+                        key={key}
+                        type={key === 'nickname' ? 'text' : 'number'}
+                        name={key}
+                        placeholder={key.replace('_', ' ')}
+                        value={(newItem as any)[key]}
+                        onChange={handleInputChange}
+                        required
+                        readOnly={key === 'pokedex_id' && !!editingItem}
+                    />
+                ))}
+                <button type="submit">{editingItem ? 'Update' : 'Add'}</button>
+                {editingItem && <button type="button" onClick={cancelEdit}>Cancel</button>}
             </form>
         </div>
     );
