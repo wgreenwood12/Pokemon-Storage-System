@@ -42,13 +42,6 @@ A simple web application for managing a Pokémon inventory. Users can store, vie
 - **Backend**: Node.js, Express.js
 - **Database**: MySQL
 
-## Installation
-
-### Prerequisites
-- **Node.js**: Install from [Node.js website](https://nodejs.org/)
-- **MySQL**: Install and set up a local database with MySQL Workbench or CLI
-
-
 ## Usage
 - **Inventory Table**: View Pokémon with attributes such as nickname, level, and attack.
 - **Type Filter**: Select a Pokémon type from the dropdown to filter the table.
