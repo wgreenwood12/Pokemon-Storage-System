@@ -1,6 +1,6 @@
 # Pokémon Inventory Management Web App
 
-A simple web application for managing a Pokémon inventory. Users can store, view, filter, add, edit, and delete Pokémon entries in a Pokédex format.
+App to manage a Pokémon inventory. Users can store, view, filter, add, edit, and delete Pokémon entries in a Pokédex format.
 
 
 <div style="display: flex; justify-content: space-around;">
