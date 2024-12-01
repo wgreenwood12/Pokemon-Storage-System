@@ -21,6 +21,7 @@ app.get('/api/inventory', async (req: Request, res: Response) => {
 // Add
 app.post('/api/inventory', async (req: Request, res: Response) => {
     try {
+        
         const item = req.body;
         const result = await addInventoryItem(item);
         res.status(201).json({ message: 'Item added', itemId: result.insertId });

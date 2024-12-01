@@ -5,7 +5,7 @@ const App: React.FC = () => {
     const [greeting, setGreeting] = useState<string>('');
     const [inventory, setInventory] = useState<any[]>([]);
     const [newItem, setNewItem] = useState({
-        pokedex_id: '',
+        pokemon: '',
         nickname: '',
         level: '',
         attack: '',
@@ -61,7 +61,7 @@ const App: React.FC = () => {
     const startEditing = (item: any) => {
         setEditingItem(item);
         setNewItem({
-            pokedex_id: item.pokedex_id,
+            pokemon: item.pokemon,
             nickname: item.nickname,
             level: item.level,
             attack: item.attack,
@@ -73,7 +73,7 @@ const App: React.FC = () => {
 
     const cancelEdit = () => {
         setEditingItem(null);
-        setNewItem({ pokedex_id: '', nickname: '', level: '', attack: '', defense: '', height: '', weight: '' });
+        setNewItem({ pokemon: '', nickname: '', level: '', attack: '', defense: '', height: '', weight: '' });
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -125,7 +125,7 @@ const App: React.FC = () => {
 
             <div className="controls">
                 <select className="type-select" value={selectedType} onChange={handleTypeChange}>
-                    <option value="">Select a Type</option>
+                    <option value="">Select all</option>
                     {types.map(type => (
                         <option key={type.type_name} value={type.type_name}>
                             {type.type_name}
@@ -171,13 +171,13 @@ const App: React.FC = () => {
                 {Object.keys(newItem).map((key) => (
                     <input
                         key={key}
-                        type={key === 'nickname' ? 'text' : 'number'}
+                        type={key === 'nickname' || key === 'pokemon' ? 'text' : 'number'}
                         name={key}
                         placeholder={key.replace('_', ' ')}
                         value={(newItem as any)[key]}
                         onChange={handleInputChange}
                         required
-                        readOnly={key === 'pokedex_id' && !!editingItem}
+                        readOnly={key === 'pokemon' && !!editingItem}
                     />
                 ))}
                 <button type="submit">{editingItem ? 'Update' : 'Add'}</button>

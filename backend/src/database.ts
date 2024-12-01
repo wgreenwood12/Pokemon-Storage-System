@@ -25,13 +25,13 @@ const testConnection = async () => {
 
 // Get all inventory items
 export const getInventory = async () => {
-    const [rows] = await db.query('SELECT i.id, p.name, i.nickname, i.level, i.attack, i.defense, i.height, i.weight FROM pokedex.inventory i INNER JOIN pokedex.pokemon p ON i.pokedex_id = p.pokedex_id');
+    const [rows] = await db.query('SELECT i.id, p.name, i.nickname, i.level, i.attack, i.defense, i.height, i.weight FROM pokedex.inventory i INNER JOIN pokedex.pokemon p ON i.pokemon = p.name');
     return rows;
 };
 
 // Add
 export const addInventoryItem = async (item: {
-    pokedex_id: number;
+    pokemon: string;
     nickname: string;
     level: number;
     attack: number;
@@ -39,10 +39,10 @@ export const addInventoryItem = async (item: {
     height: number;
     weight: number;
 }) => {
-    const { pokedex_id, nickname, level, attack, defense, height, weight } = item;
+    const { pokemon, nickname, level, attack, defense, height, weight } = item;
     const [result] = await db.query<ResultSetHeader>(
-        'INSERT INTO pokedex.inventory (pokedex_id, nickname, level, attack, defense, height, weight) VALUES (?, ?, ?, ?, ?, ?, ?)',
-        [pokedex_id, nickname, level, attack, defense, height, weight]
+        'INSERT INTO pokedex.inventory (pokemon, nickname, level, attack, defense, height, weight) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [pokemon, nickname, level, attack, defense, height, weight]
     );
 
     return { insertId: result.insertId };
