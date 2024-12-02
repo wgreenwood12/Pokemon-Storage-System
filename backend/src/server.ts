@@ -17,12 +17,16 @@ app.get('/api/inventory', async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Failed to retrieve inventory' });
     }
 });
+function cleanPokemonName(pokemonName: string): string {
+    return pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1).toLowerCase();
+}
 
 // Add
 app.post('/api/inventory', async (req: Request, res: Response) => {
     try {
         
         const item = req.body;
+        item.pokemon = cleanPokemonName(item.pokemon);
         const result = await addInventoryItem(item);
         res.status(201).json({ message: 'Item added', itemId: result.insertId });
     } catch (error) {
